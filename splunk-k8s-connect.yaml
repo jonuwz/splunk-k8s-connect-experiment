@@ -1,0 +1,106 @@
+global:
+  logLevel: info
+  splunk:
+    hec:
+      host: splunk-hec
+      token: k8stoken
+      insecureSSL: true
+  kubernetes:
+    clusterName: "dev"
+
+splunk-kubernetes-logging:
+  enabled: true
+  fluentd:
+    path: /var/log/containers/*.log
+  containers:
+    path: /var/log
+    pathDest: /var/lib/docker/containers
+    logFormatType: cri
+    # Default for "cri": "%Y-%m-%dT%H:%M:%S.%N%:z"
+  k8sMetadata:
+    podLabels:
+    watch: true
+    cache_ttl: 3600
+  sourcetypePrefix: "kube"
+  
+  rbac:
+    create: true
+    openshiftPrivilegedSccBinding: false
+
+  serviceAccount:
+    create: true
+    usePullSecrets: false
+
+  podSecurityPolicy:
+    create: false
+    apparmor_security: true
+    apiGroup: policy
+
+  secret:
+    create: true
+
+  journalLogPath: /run/log/journal
+  charEncodingUtf8: false
+  image:
+    registry: docker.io
+    name: splunk/fluentd-hec
+    tag: 1.2.5
+    pullPolicy: IfNotPresent
+    usePullSecret: false
+    pullsecretName:
+
+  # Controls the resources used by the fluentd daemonset
+  resources:
+    # limits:
+    #  cpu: 100m
+    #  memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 200Mi
+
+  buffer:
+    "@type": memory
+    total_limit_size: 600m
+    chunk_limit_size: 20m
+    chunk_limit_records: 100000
+    flush_interval: 5s
+    flush_thread_count: 1
+    overflow_action: block
+    retry_max_times: 5
+    retry_type: periodic
+
+  sendAllMetadata: false
+
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      effect: NoSchedule
+
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+
+  # List of key/value pairs for metadata purpse.
+  customMetadata:
+
+  # List of annotation metadata you would like to enrich log data with
+  customMetadataAnnotations:
+    - name: env
+      annotation: splunk.com/env
+    - name: family
+      annotation: splunk.com/family
+    - name: app
+      annotation: splunk.com/app
+    - name: service
+      annotation: splunk.com/service
+
+  # customFilters      
+  customFilters:
+    sourceFilter:
+      type: jq_transformer
+      tag: tail.containers.**
+      body: jq '.record.source = .record.splunk_index + ":" + .record.family + ":" + .record.app + ":" + .record.service + ":" + .record.env | .record'
+  
+## Enabling splunk-kubernetes-objects will install the `splunk-kubernetes-objects` chart to a kubernetes
+splunk-kubernetes-objects:
+  enabled: false
+splunk-kubernetes-metrics:
+  enabled: false

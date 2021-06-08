@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
+  labels:
+    name: test
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logtest-logger
+  namespace: test
+  annotations:
+    splunk.com/env: prod
+    splunk.com/family: poc
+    splunk.com/app: logger
+    splunk.com/service: logtest
+spec:
+  containers:
+  - name: logger
+    image: mffiedler/ocp-logtest:latest
+    args:
+    - python
+    - ocp_logtest.py
+    - --line-length=128
+    - --num-lines=600
+    - --rate
+    - "60"
+    - --fixed-line
