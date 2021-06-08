@@ -1,5 +1,19 @@
 # experiments in splunk-connect-for-kuberetes
 
+[splunk connect for kubernetes](https://github.com/splunk/splunk-connect-for-kubernetes) solves the problem of raw logs not containing metadata.  
+(container name etc etc).  
+  
+Old style docker logs _could_ contain custom data if you wanted to by using labels and log-opts, in that case the raw log would look like :  
+```bash
+{"log":"something","attrs":{"mylabel":"somevalue"}
+```
+  
+Kubernetes doesn't put that info in your logs, and besides, the new logging format for CRI-O runtime eliminates the docker json-logging driver entirely.  
+
+The connector for kubernetes uses fluentd to enrich the logs with metadata, before sending the message to your splunk infra with via the [splunk hec output plugin](https://github.com/splunk/fluent-plugin-splunk-hec)  
+  
+It does other things too, like collect metrics + infrastructure logs, but thats not explored here.
+
 ### create k8s cluster
 
 we'll use [k3d](https://k3d.io/) because its simple.  
