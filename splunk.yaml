@@ -1,4 +1,29 @@
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bootstrap
+data:
+  authorize.conf: |
+    [tokens_auth]
+    disabled = true
+  indexes.conf: |+
+    [test]
+    coldPath = $SPLUNK_DB/test/colddb
+    enableDataIntegrityControl = 0
+    enableTsidxReduction = 0
+    homePath = $SPLUNK_DB/test/db
+    maxTotalDataSizeMB = 512000
+    thawedPath = $SPLUNK_DB/test/thaweddb
+
+    [kubernetes]
+    coldPath = $SPLUNK_DB/kubernetes/colddb
+    enableDataIntegrityControl = 0
+    enableTsidxReduction = 0
+    homePath = $SPLUNK_DB/kubernetes/db
+    maxTotalDataSizeMB = 512000
+    thawedPath = $SPLUNK_DB/kubernetes/thaweddb
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,6 +50,21 @@ spec:
           value: password
         - name: SPLUNK_HEC_TOKEN
           value: k8stoken
+        - name: SPLUNK_DISABLE_POPUPS
+          value: "true"
+        volumeMounts:
+        - name: bootstrap
+          mountPath: "/opt/splunk-etc/system/local"
+          readOnly: true
+      volumes:
+      - name: bootstrap
+        configMap:
+          name: bootstrap
+          items:
+          - key: "authorize.conf"
+            path: "authorize.conf"
+          - key: "indexes.conf"
+            path: "indexes.conf"
 ---
 apiVersion: v1
 kind: Service
