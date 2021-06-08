@@ -1,5 +1,10 @@
 # experiments in splunk-connect-for-kuberetes
 
+### prereqs
+This is a toy implementation - assuming on your laptop.  
+You will need linux or WSL2.  
+You will also need with docker, kubectl and helm installed - these are trivailly googleable.  
+
 [splunk connect for kubernetes](https://github.com/splunk/splunk-connect-for-kubernetes) solves the problem of raw logs not containing metadata.  
 (container name etc etc).  
   
