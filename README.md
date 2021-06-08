@@ -3,7 +3,9 @@
 ### prereqs
 This is a toy implementation - assuming on your laptop.  
 You will need linux or WSL2.  
-You will also need with docker, kubectl and helm installed - these are trivailly googleable.  
+You will also need docker, kubectl and helm installed - these are trivailly googleable.  
+
+## Why ?
 
 [splunk connect for kubernetes](https://github.com/splunk/splunk-connect-for-kubernetes) solves the problem of raw logs not containing metadata.  
 (container name etc etc).  
@@ -18,6 +20,8 @@ Kubernetes doesn't put that info in your logs, and besides, the new logging form
 The connector for kubernetes uses fluentd to enrich the logs with metadata, before sending the message to your splunk infra with via the [splunk hec output plugin](https://github.com/splunk/fluent-plugin-splunk-hec)  
   
 It does other things too, like collect metrics + infrastructure logs, but thats not explored here.
+
+## Setup
 
 ### create k8s cluster
 
