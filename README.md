@@ -29,6 +29,7 @@ kubectl apply -f ./splunk.yaml
 ```
   
 You should be able to get to https://localhost:8081 in a while  
+**Now would be a good time to create an index called test**
 
 ### deploy the splunk-connector-for-kubernetes 
 
@@ -68,7 +69,8 @@ kubectl apply -f logger_app.yaml
   
 This creates an app that logs a few events a second in a namespace called `test`
   
-By default the events go to the main index, but by setting an aoontation on the namespace, the events will be routed to an index of your choice.
+By default the events go to the main index, but by setting an aoontation on the namespace, the events will be routed to an index of your choice.  
+In this case we are saying to send logs to the test index - **You need to create the index called test for this to work**
   
 ```bash
 kubectl annotate ns/test splunk.com/index=test
