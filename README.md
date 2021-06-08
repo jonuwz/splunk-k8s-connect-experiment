@@ -85,6 +85,8 @@ In this case we are saying to send logs to the test index - **You need to create
 kubectl annotate ns/test splunk.com/index=test
 ```
 
+The magic that makes this work is inside a [fluentd record_transformer](https://github.com/splunk/splunk-connect-for-kubernetes/blob/1.4.7/manifests/splunk-kubernetes-logging/configMap.yaml#L255)
+
 ### enable terse logging
   
 Up to now we've been loggin the full payload - lets clean that up  
