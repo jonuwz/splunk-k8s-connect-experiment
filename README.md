@@ -80,7 +80,8 @@ This creates an app that logs a few events a second in a namespace called `test`
 
 ### route events to different indexes based on container metadata
 
-By default the events go to the main index, but by setting an aoontation on the namespace, the events will be routed to an index of your choice.  
+By default the events go to the main index, but by setting an annotation on the contaier ( or the parent namespace), the events will be routed to an index of your choice.  
+Setting the value on the namespace makes more sense in an 'as a service' environment, but its not easy to disable the 'per container' precedence through config alone.  
 In this case we are saying to send logs to the test index - **You need to create the index called test for this to work**
   
 ```bash
