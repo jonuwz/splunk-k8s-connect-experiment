@@ -2,7 +2,7 @@
 
 ### create k8s cluster
 
-we'll use (k3d)[https://k3d.io/] because its simple.  
+we'll use [k3d](https://k3d.io/) because its simple.  
 
 ```bash
 k3d cluster create --api-port 6550 -p "8081:80@loadbalancer" test
@@ -25,7 +25,7 @@ helm install splunk-connect -f splunk-k8s-connect.yaml splunk/splunk-connect-for
   
 There's some interesting configurations in the splunk-k8s-connect.yaml  
 
-``yaml
+```yaml
   customMetadataAnnotations:
     - name: env
       annotation: splunk.com/env
@@ -68,6 +68,8 @@ sed -r 's/(^\s+sendAllMetadata:\s*).*/\1false/' splunk-k8s-connect.yaml
 helm upgrade splunk-connect -f splunk-k8s-connect.yaml splunk/splunk-connect-for-kubernetes
 ```
 
-Before 
+Before
+![before_image](assets/verbose.png)
 
 After
+![after_image](assets/terse.png)
